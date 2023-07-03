@@ -1,51 +1,61 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running `nixos-help`).
-
-{ config, pkgs, ... }:
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      #./home-manager/home.nix
-      #./home-manager/desktops/gnome.nix
-    ];
-  
+  config,
+  pkgs,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./stylix.nix
+    #./home-manager/home.nix
+    #./home-manager/desktops/gnome.nix
+  ];
+  services.dbus.enable = true;
   # programs.sway.enable = true;
 
   # Allow unfree packages
-  security.pam.services.swaylock = {}; 
-  stylix.image = ./.wallpaper;
+  security.pam.services.swaylock = {};
+
   hardware.pulseaudio.enable = false;
   nixpkgs.config = {
-  allowUnfree = true;
+    allowUnfree = true;
   };
-  
   fonts.fonts = with pkgs; [
-  (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+    (nerdfonts.override {fonts = ["FiraCode" "DroidSansMono"];})
   ];
+  programs.steam.enable = true;
 
+  networking.networkmanager.enable = true;
 
   services.pipewire = {
-  enable = true;
-  alsa.enable = true;
-  alsa.support32Bit = true;
-  pulse.enable = true;
-  # If you want to use JACK applications, uncomment this
-  #jack.enable = true;
-  };  
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
+  };
   # Hyprland Cachix
-  
-  
   nix.settings = {
     substituters = ["https://hyprland.cachix.org"];
     trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
   };
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  programs.hyprland.enable = true;
+
+  programs.hyprland = {
+    enable = true;
+    xwayland = {
+      enable = true;
+      #    hidpi = true;
+    };
+  };
+
   # Enable Flakes
   nix = {
     package = pkgs.nixFlakes;
@@ -76,11 +86,10 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
-
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  
+  #services.xserver.desktopManager.gnome.enable = true;
+  #services.xserver.displayManager.sddm.enable = true;
 
   # Configure keymap in X11
   # services.xserver.layout = "us";
@@ -97,55 +106,91 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-   users.users.basilk = {
-     isNormalUser = true;
-     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-     packages = with pkgs; [
-       firefox
-       tree
-     ];
-   };
-
+  users.users.basilk = {
+    isNormalUser = true;
+    extraGroups = ["wheel"]; # Enable ‘sudo’ for the user.
+    packages = with pkgs; [
+      firefox
+      tree
+    ];
+  };
+/*
+  xdg.portal = let
+    gnome = config.services.xserver.desktopManager.gnome.enable;
+  in {
+    enable = true;
+    wlr = {
+      enable = true;
+      settings = {
+        screencast = {
+          output_name = "eDP-1";
+          max_fps = 30;
+          exec_before = "pkill mako";
+          exec_after = "mako";
+          chooser_type = "default";
+        };
+      };
+    };
+    extraPortals = []; #pkgs.xdg-desktop-portal-wlr ];
+    gtkUsePortal = true;
+  };
+*/
   # Fix spice usb redir
   virtualisation.spiceUSBRedirection.enable = true;
- 
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
 
-nixpkgs.overlays =
-  let
+  nixpkgs.overlays = let
     myOverlay = self: super: {
-      discord = super.discord.override { withOpenASAR = true; withVencord = true; };
+      discord = super.discord.override {
+        withOpenASAR = true;
+        withVencord = true;
+      };
     };
-  in
-  [ myOverlay ];
-/*
-   environment.systemPackages = with pkgs; [
-     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-     neovim
-     wget
-     pika-backup
-     gparted
-     neofetch
-     virt-manager
-     gnome.gnome-tweaks
-     aria
-     libvirt
-     qemu
-     spice
-     win-spice
-     spice-gtk
-     ntfsprogs
-     vscodium-fhs
-     git
-     foot
-     nyancat
-     firefox-devedition-bin
-     discord
-     bitwarden
-     gnomeExtensions.appindicator
-     ]; 
-*/
+    intelStuff = self:
+      pkgs {
+        vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
+      };
+  in [myOverlay];
+
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver # LIBVA_DRIVER_NAME=iHD
+      vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
+  };
+  environment.systemPackages = [pkgs.firefox-devedition-bin];
+  /*
+  environment.systemPackages = with pkgs; [
+    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    neovim
+    wget
+    pika-backup
+    gparted
+    neofetch
+    virt-manager
+    gnome.gnome-tweaks
+    aria
+    libvirt
+    qemu
+    spice
+    win-spice
+    spice-gtk
+    ntfsprogs
+    vscodium-fhs
+    git
+    foot
+    nyancat
+    firefox-devedition-bin
+    discord
+    bitwarden
+    gnomeExtensions.appindicator
+    ];
+  */
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -178,6 +223,4 @@ nixpkgs.overlays =
   # BefWore changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
 }
-
