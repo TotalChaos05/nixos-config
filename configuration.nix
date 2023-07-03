@@ -16,6 +16,9 @@
   services.dbus.enable = true;
   # programs.sway.enable = true;
 
+  # tlp
+  services.tlp.enable = true;
+
   # Allow unfree packages
   security.pam.services.swaylock = {};
 
@@ -29,7 +32,13 @@
   programs.steam.enable = true;
 
   networking.networkmanager.enable = true;
-
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+  hardware.bluetooth.settings = {
+    General = {
+      Enable = "Source,Sink,Media,Socket";
+    };
+  };
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -114,27 +123,16 @@
       tree
     ];
   };
-/*
-  xdg.portal = let
-    gnome = config.services.xserver.desktopManager.gnome.enable;
-  in {
-    enable = true;
-    wlr = {
-      enable = true;
-      settings = {
-        screencast = {
-          output_name = "eDP-1";
-          max_fps = 30;
-          exec_before = "pkill mako";
-          exec_after = "mako";
-          chooser_type = "default";
-        };
-      };
-    };
-    extraPortals = []; #pkgs.xdg-desktop-portal-wlr ];
+  security.polkit.enable = true;
+  xdg.portal = {
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
     gtkUsePortal = true;
   };
-*/
+  services.logind = {
+    extraConfig = "HandlePowerKey=suspend";
+    lidSwitch = "suspend";
+  };
+
   # Fix spice usb redir
   virtualisation.spiceUSBRedirection.enable = true;
 

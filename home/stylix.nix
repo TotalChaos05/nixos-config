@@ -25,9 +25,9 @@
   #stylix.targets.rofi.enable = true;
   #stylix.targets.mako.enable = true;
   #stylix.autoEnable = true;
-  #stylix.polarity = "dark";
+  stylix.polarity = "dark";
   #stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/monokai.yaml";
-  #stylix.opacity.terminal = 0.92;
+  #stylix.opacity.terminal = 0.82;
   #stylix.image = ./wallpaper.png;
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";

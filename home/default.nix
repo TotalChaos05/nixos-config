@@ -10,7 +10,7 @@
   home.homeDirectory = "/home/basilk";
   imports = [
     # ./sway.nix
-    # ./swaylock.nix
+    ./waybar.nix
     # ./stylix.nix
   ];
   # This value determines the Home Manager release that your configuration is
@@ -23,7 +23,28 @@
   home.stateVersion = "23.05"; # Please read the comment before changing.
   # The home.packages option allows you to install Nix packages into your
   # environment.
-
+  services.swayidle = {
+    enable = true;
+    package = pkgs.swayidle;
+    systemdTarget = "default.target";
+    timeouts = [
+      {
+        timeout = 300;
+        command = "${pkgs.swaylock}/bin/swaylock -f -c 000000";
+      }
+      {
+        timeout = 600;
+        command = "hyprctl dispatch dpms off";
+        resumeCommand = "hyprctl dispatch dpms on";
+      }
+    ];
+    events = [
+      {
+        event = "before-sleep";
+        command = "${pkgs.swaylock}/bin/swaylock -F -l -f -c 000000";
+      }
+    ];
+  };
   programs.git = {
     enable = true;
     userName = "Basil Keeler";
@@ -46,19 +67,34 @@
     enable = true;
     package = pkgs.rofi-wayland;
   };
+
   programs.rbw = {
     enable = true;
+  };
+  services.gammastep = {
+    enable = true;
+    tray = true;
+    provider = "manual";
+    latitude = 32.9546;
+    longitude = 97.0150;
+    temperature.night = 2000;
   };
   home.packages = with pkgs; [
     # pkgs.hello
     # pkgs.catppuccin-gtk
+    nwg-dock-hyprland
+    sshuttle
     gnome.nautilus
     pavucontrol
     alejandra
     hyprpaper
     catppuccin-cursors
     mosh
+    q4wine
+    wine
+    winetricks
     sonixd
+    killall
     localsend
     jellyfin-mpv-shim
     gnome.gnome-system-monitor
@@ -82,14 +118,16 @@
     discord
     pinentry-curses
     bitwarden
+    swayidle
     qt6.full
   ];
+
   services.mpris-proxy.enable = true;
   services.playerctld = {
     enable = true;
     package = pkgs.playerctl;
   };
-  programs.waybar = import ./waybar.nix;
+  # programs.waybar = import ./waybar.nix;
   # programs.bash.enable = true;
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -119,27 +157,6 @@
 
   services.mako.enable = true;
 
-  services.swayidle = {
-    enable = true;
-    timeouts = [
-      {
-        timeout = 300;
-        command = "swaylock -f -c 000000";
-      }
-      {
-        timeout = 600;
-        command = "swaymsg 'output * power off'";
-        resumeCommand = "swaymsg 'output * power on'";
-      }
-    ];
-    events = [
-      {
-        event = "before-sleep";
-        command = "/usr/bin/swaylock -F -l -f -c 000000";
-      }
-    ];
-  };
-
   # # Cursor
   # # home.file.".icons/default".source = "${pkgs.catppuccin-cursors.mochaPink}/share/icons/Catppuccin-Mocha-Pink-Cursors";
 
@@ -157,6 +174,7 @@
   # if you don't want to manage your shell through Home Manager.
   home.sessionVariables = {
     # EDITOR = "emacs";
+    MOZ_ENABLE_WAYLAND = 1;
   };
 
   # Let Home Manager install and manage itself.
