@@ -26,16 +26,16 @@
   services.swayidle = {
     enable = true;
     package = pkgs.swayidle;
-    systemdTarget = "default.target";
+    systemdTarget = "graphical-session.target";
     timeouts = [
       {
         timeout = 300;
         command = "${pkgs.swaylock}/bin/swaylock -f -c 000000";
       }
       {
-        timeout = 600;
-        command = "hyprctl dispatch dpms off";
-        resumeCommand = "hyprctl dispatch dpms on";
+        timeout = 6;
+        command = "${pkgs.hyprland}/bin/hyprctl dispatch dpms off";
+        resumeCommand = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
       }
     ];
     events = [
@@ -71,6 +71,7 @@
   programs.rbw = {
     enable = true;
   };
+
   services.gammastep = {
     enable = true;
     tray = true;
@@ -83,11 +84,13 @@
     # pkgs.hello
     # pkgs.catppuccin-gtk
     nwg-dock-hyprland
+    jellycli
     sshuttle
     gnome.nautilus
     pavucontrol
     alejandra
-    hyprpaper
+    #hyprpaper
+    swaybg
     catppuccin-cursors
     mosh
     q4wine
