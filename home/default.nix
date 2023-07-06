@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  #pkgs-stable,
   ...
 }: {
   # Home Manager needs a bit of information about you and the paths it should
@@ -10,9 +11,11 @@
   home.homeDirectory = "/home/basilk";
   imports = [
     # ./sway.nix
-    ./waybar.nix
+    ./desktops/hyprland
+    ./packages
     # ./stylix.nix
   ];
+
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -23,113 +26,29 @@
   home.stateVersion = "23.05"; # Please read the comment before changing.
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  services.swayidle = {
-    enable = true;
-    package = pkgs.swayidle;
-    systemdTarget = "graphical-session.target";
-    timeouts = [
-      {
-        timeout = 300;
-        command = "${pkgs.swaylock}/bin/swaylock -f -c 000000";
-      }
-      {
-        timeout = 600;
-        command = "${pkgs.hyprland}/bin/hyprctl dispatch dpms off";
-        resumeCommand = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
-      }
-    ];
-    events = [
-      {
-        event = "before-sleep";
-        command = "${pkgs.swaylock}/bin/swaylock -F -l -f -c 000000";
-      }
-    ];
-  };
+
+
   programs.git = {
     enable = true;
     userName = "Basil Keeler";
     userEmail = "basil.keeler@outlook.com";
   };
 
-  programs.swaylock = {
-    enable = true;
-    settings = {
-      image = lib.mkDefault "~/wallpaper.png";
-      scaling = "fill";
-    };
-  };
+
   programs.vscode = {
-    enable = true;
+    enable = false;
     package = pkgs.vscodium-fhs;
   };
-  programs.foot.enable = true;
-  programs.rofi = {
+
+  programs.fish = {
     enable = true;
-    package = pkgs.rofi-wayland;
+  };
+  programs.starship = {
+    enable = true;
+    enableFishIntegration = true;
   };
 
-  programs.rbw = {
-    enable = true;
-  };
-
-  services.gammastep = {
-    enable = true;
-    tray = true;
-    provider = "manual";
-    latitude = 32.9546;
-    longitude = 97.0150;
-    temperature.night = 2000;
-  };
-  home.packages = with pkgs; [
-    # pkgs.hello
-    # pkgs.catppuccin-gtk
-    nwg-dock-hyprland
-    jellycli
-    sshuttle
-    gnome.nautilus
-    pavucontrol
-    alejandra
-    #hyprpaper
-    swaybg
-    catppuccin-cursors
-    mosh
-    q4wine
-    wine
-    winetricks
-    sonixd
-    killall
-    localsend
-    jellyfin-mpv-shim
-    gnome.gnome-system-monitor
-    vim
-    neovim
-    wget
-    pika-backup
-    gparted
-    neofetch
-    virt-manager
-    gnome.gnome-tweaks
-    aria
-    libvirt
-    qemu
-    spice
-    win-spice
-    spice-gtk
-    ntfsprogs
-    nyancat
-    #firefox-devedition-bin
-    discord
-    pinentry-curses
-    bitwarden
-    swayidle
-    qt6.full
-  ];
-
-  services.mpris-proxy.enable = true;
-  services.playerctld = {
-    enable = true;
-    package = pkgs.playerctl;
-  };
+# ++ [pkgs-stable.lapce];
   # programs.waybar = import ./waybar.nix;
   # programs.bash.enable = true;
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -150,6 +69,9 @@
 
     ".config/hypr/hyprland.conf".source = dotfiles/hypr/hyprland.conf;
     ".config/hypr/hyprpaper.conf".source = dotfiles/hypr/hyprpaper.conf;
+
+    # Script to unlock ssh-key
+    ".local/bin/ssh-unlock".source = dotfiles/ssh-unlock;
 
     # Catppuccin
     ".config/hypr/mocha.conf".source = dotfiles/hypr/mocha.conf;

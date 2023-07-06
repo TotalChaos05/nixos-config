@@ -22,6 +22,14 @@
   # Allow unfree packages
   security.pam.services.swaylock = {};
 
+  programs.fish.enable = true;
+  users.users.basilk.shell = pkgs.fish;
+  programs.ssh.startAgent = true;
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "openssl-1.1.1u"
+  ];
+
   hardware.pulseaudio.enable = false;
   nixpkgs.config = {
     allowUnfree = true;
@@ -57,13 +65,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  programs.hyprland = {
-    enable = true;
-    xwayland = {
-      enable = true;
-      #    hidpi = true;
-    };
-  };
+   
 
   # Enable Flakes
   nix = {
@@ -126,7 +128,6 @@
   security.polkit.enable = true;
   xdg.portal = {
     extraPortals = [pkgs.xdg-desktop-portal-gtk];
-    gtkUsePortal = true;
   };
   services.logind = {
     extraConfig = "HandlePowerKey=suspend";
