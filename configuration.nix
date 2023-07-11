@@ -10,6 +10,8 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./stylix.nix
+    ./home
+    ./virt.nix
     #./home-manager/home.nix
     #./home-manager/desktops/gnome.nix
   ];
@@ -21,7 +23,7 @@
 
   # Allow unfree packages
   security.pam.services.swaylock = {};
-
+  programs.dconf.enable = true;
   programs.fish.enable = true;
   users.users.basilk.shell = pkgs.fish;
   programs.ssh.startAgent = true;
@@ -44,7 +46,7 @@
   services.blueman.enable = true;
   hardware.bluetooth.settings = {
     General = {
-      Enable = "Source,Sink,Media,Socket";
+      Enable = "Media,Socket,Sink,Source";
     };
   };
   services.pipewire = {
@@ -64,8 +66,6 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-   
 
   # Enable Flakes
   nix = {
@@ -95,12 +95,12 @@
   # };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  # services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
+  # services.xserver.displayManager.gdm.enable = true;
   #services.xserver.desktopManager.gnome.enable = true;
-  #services.xserver.displayManager.sddm.enable = true;
+  # services.xserver.displayManager.sddm.enable = true;
 
   # Configure keymap in X11
   # services.xserver.layout = "us";
@@ -162,7 +162,9 @@
       libvdpau-va-gl
     ];
   };
-  environment.systemPackages = [pkgs.firefox-devedition-bin];
+
+
+  environment.systemPackages = [pkgs.firefox-devedition-bin pkgs.emptty];
   /*
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
@@ -209,6 +211,15 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+    networking.firewall = { 
+    enable = true;
+    allowedTCPPortRanges = [ 
+      { from = 1714; to = 1764; } # KDE Connect
+    ];  
+    allowedUDPPortRanges = [ 
+      { from = 1714; to = 1764; } # KDE Connect
+    ];  
+  };  
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
