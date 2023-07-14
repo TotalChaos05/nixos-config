@@ -12,9 +12,14 @@
     ./stylix.nix
     ./home
     ./virt.nix
+#    ./nix-ld.nix
     #./home-manager/home.nix
     #./home-manager/desktops/gnome.nix
   ];
+    virtualisation = {
+    waydroid.enable = true;
+    lxd.enable = true;
+  };
   services.dbus.enable = true;
   # programs.sway.enable = true;
 
@@ -26,6 +31,7 @@
   programs.dconf.enable = true;
   programs.fish.enable = true;
   users.users.basilk.shell = pkgs.fish;
+  
   programs.ssh.startAgent = true;
 
   nixpkgs.config.permittedInsecurePackages = [
@@ -146,13 +152,22 @@
         withOpenASAR = true;
         withVencord = true;
       };
+      ncmpcpp = super.ncmpcpp.override {
+        visualizerSupport = true;
+        clockSupport = true;
+      };
     };
     intelStuff = self:
       pkgs {
         vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
       };
-  in [myOverlay];
 
+  
+  in [ myOverlay ];
+
+
+
+  
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [

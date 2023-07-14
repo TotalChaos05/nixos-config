@@ -13,6 +13,10 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+#    nix-ld.url = "github:Mic92/nix-ld";
+#    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+#    nix-alien.url = "github:thiagokokada/nix-alien";
+#    nix-alien.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = {
     home-manager,
@@ -21,6 +25,9 @@
     nixpkgs,
     hyprland-plugins,
     nixpkgs-stable,
+    nur,
+#    nix-ld,
+#    nix-alien,
     ...
   }: {
     # replace 'joes-desktop' with your hostname here.
@@ -28,6 +35,7 @@
       specialArgs = { inherit hyprland hyprland-plugins;};
       system = "x86_64-linux";
       modules = [
+#        nix-ld.nixosModules.nix-ld
         hyprland.nixosModules.default
         {programs.hyprland.enable = true;}
         stylix.nixosModules.stylix
@@ -37,7 +45,12 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           environment.localBinInPath = true;
-        }
+          nixpkgs.overlays = [
+            nur.overlay 
+ #           nix-alien.overlays.default
+          ];
+          }
+        nur.nixosModules.nur
       ];
     };
   };

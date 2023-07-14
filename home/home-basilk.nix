@@ -1,5 +1,8 @@
 {
   pkgs,
+  user,
+  lib,
+  stdenv,
   ...
 }:
 {
@@ -21,9 +24,13 @@
   programs.fish = {
     enable = true;
   };
-  
+  # programs.fish.interactiveShellInit = "exec hilbish";
   home.packages = with pkgs;[
     gnome.nautilus
+    killall
+    neofetch
+    hyfetch
+    cava
     pavucontrol
     discord
     exercism
@@ -38,27 +45,27 @@
     obsidian
     syncthingtray
     syncthing
-    caffeine-ng
     wine
     lapce
-    gnome.geary
+    mpdevil
   ];
-home = {
-  file = {
-    ".wallpaper.png".source = ../assets/wallpaper.png;
-    #".config/hypr/hyprland.conf".source = dotfiles/hypr/hyprland.conf;
-    ".config/hypr/hyprpaper.conf".source = dotfiles/hypr/hyprpaper.conf;
-    # Script to unlock ssh-key
-    ".local/bin/ssh-unlock".source = dotfiles/ssh-unlock;
-    # Catppuccin
-    ".config/hypr/mocha.conf".source = dotfiles/hypr/mocha.conf;
-    ".config/hypr/frappe.conf".source = dotfiles/hypr/frappe.conf;
-    ".config/hypr/macchiato.conf".source = dotfiles/hypr/macchiato.conf;
-    ".config/hypr/latte.conf".source = dotfiles/hypr/latte.conf;
+  home = {
+    file = {
+      ".wallpaper.png".source = ../assets/wallpaper.png;
+      #".config/hypr/hyprland.conf".source = dotfiles/hypr/hyprland.conf;
+      ".config/hypr/hyprpaper.conf".source = dotfiles/hypr/hyprpaper.conf;
+      # Script to unlock ssh-key
+      ".local/bin/ssh-unlock".source = dotfiles/ssh-unlock;
+      # Catppuccin
+      ".config/hypr/mocha.conf".source = dotfiles/hypr/mocha.conf;
+      ".config/hypr/frappe.conf".source = dotfiles/hypr/frappe.conf;
+      ".config/hypr/macchiato.conf".source = dotfiles/hypr/macchiato.conf;
+      ".config/hypr/latte.conf".source = dotfiles/hypr/latte.conf;
+      ".config/cava/config".source = dotfiles/cava/config;
     
-  };
-  
-};
+      };
+    };
+
   home.stateVersion = "23.05"; # Please read the comment before changing.
   
   gtk.iconTheme = {
