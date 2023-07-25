@@ -6,7 +6,12 @@
   ...
 }:
 {
-  imports = [./hyprland.nix ./services.nix ./programs.nix ./stylix.nix ./gtk.nix];
+  imports = [./hyprland.nix 
+  ./services.nix 
+  ./programs.nix 
+  # ./stylix.nix 
+  ./gtk.nix
+  ];
     programs.git = {
     enable = true;
     userName = "Basil Keeler";
@@ -28,6 +33,7 @@
   home.packages = with pkgs;[
     gnome.nautilus
     killall
+    moonlight-qt
     neofetch
     hyfetch
     cava
@@ -99,6 +105,12 @@
     # EDITOR = "emacs";
     MOZ_ENABLE_WAYLAND = 1;
   };
+  systemd.user.targets.tray = {
+		Unit = {
+			Description = "Home Manager System Tray";
+			Requires = [ "graphical-session-pre.target" ];
+		};
+	};
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

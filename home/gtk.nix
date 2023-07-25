@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   ...
 }:
 {
@@ -8,7 +9,7 @@
     enable = true;
     settings = {
       "org/gnome/desktop/interface" = {
-        color-scheme = "prefer-dark";
+         color-scheme = lib.mkDefault "prefer-dark";
       };
     };
   };

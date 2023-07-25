@@ -34,7 +34,7 @@
     temperature.night = 2000;
   };
   services.playerctld.enable = true;
-  services.kdeconnect.enable = true;
+#  services.kdeconnect.enable = true;
   services.mpd = {
     enable = true;
     musicDirectory = /home/${user}/Music;

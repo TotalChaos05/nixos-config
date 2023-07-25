@@ -4,6 +4,7 @@
   programs.rofi = {
     enable = true;
     package = pkgs.rofi-wayland;
+    terminal = "foot";
   };
   programs.swaylock = {
     enable = true;

@@ -16,7 +16,7 @@
     #./home-manager/home.nix
     #./home-manager/desktops/gnome.nix
   ];
-    virtualisation = {
+  virtualisation = {
     waydroid.enable = true;
     lxd.enable = true;
   };
@@ -61,7 +61,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = true;
   };
   # Hyprland Cachix
   nix.settings = {
@@ -80,7 +80,7 @@
       experimental-features = nix-command flakes
     '';
   };
-  networking.hostName = "t-hon"; # Define your hostname.
+  networking.hostName = import ./hostname.nix; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   # networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
@@ -125,7 +125,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.basilk = {
     isNormalUser = true;
-    extraGroups = ["wheel"]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel" "networkmanager"]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       firefox
       tree

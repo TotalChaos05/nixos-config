@@ -1,4 +1,4 @@
-{pkgs, hyprland-plugins, ...}:
+{pkgs, lib, hyprland-plugins, ...}:
 {
   home.packages = with pkgs; [
     libva
@@ -7,7 +7,6 @@ wayland.windowManager.hyprland = {
     enable = true;
     #nvidiaPatches = true;
     systemdIntegration = true;
-    recommendedEnvironment = true;
     xwayland = {
       enable = true;
       hidpi = true;

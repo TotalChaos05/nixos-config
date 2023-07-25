@@ -4,7 +4,7 @@
   lib,
   ...
 }: {
-  #stylix.targets.swaylock.enable = true;
+  stylix.targets.swaylock.enable = true;
   #programs.swaylock = {
   #  enable = true;
   #  settings = {
@@ -20,7 +20,7 @@
   # Stylix targets
   #stylix.targets.gnome.enable = true;
   stylix.targets.gtk.enable = true;
-  stylix.targets.kde.enable = true;
+#  stylix.targets.kde.enable = true;
   #stylix.targets.foot.enable = true;
   #stylix.targets.waybar.enable = true;
   #stylix.targets.rofi.enable = true;
