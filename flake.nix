@@ -54,6 +54,7 @@
             nur.overlay 
  #           nix-alien.overlays.default
           ];
+          nixpkgs.config.allowUnfree = true;
           }
         nur.nixosModules.nur
       ];
