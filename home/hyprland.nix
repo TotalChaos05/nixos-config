@@ -1,6 +1,6 @@
 {pkgs, lib, hyprland-plugins, inputs, ...}:
 {
-imports = [./wlr-shared.nix]
+imports = [./wlr-shared.nix];
   home.packages = [
     pkgs.libva
     inputs.xdph.packages.x86_64-linux.xdg-desktop-portal-hyprland
@@ -8,6 +8,7 @@ imports = [./wlr-shared.nix]
 services.swayidle.systemdTarget = "hyprland-session.target";
 wayland.windowManager.hyprland = {
     enable = true;
+    package = inputs.hyprland.packages.x86_64-linux.hyprland;
     #nvidiaPatches = true;
     systemdIntegration = true;
     xwayland = {
