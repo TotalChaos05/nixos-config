@@ -1,8 +1,11 @@
-{pkgs, lib, hyprland-plugins, ...}:
+{pkgs, lib, hyprland-plugins, inputs, ...}:
 {
-  home.packages = with pkgs; [
-    libva
+imports = [./wlr-shared.nix]
+  home.packages = [
+    pkgs.libva
+    inputs.xdph.packages.x86_64-linux.xdg-desktop-portal-hyprland
   ];
+services.swayidle.systemdTarget = "hyprland-session.target";
 wayland.windowManager.hyprland = {
     enable = true;
     #nvidiaPatches = true;

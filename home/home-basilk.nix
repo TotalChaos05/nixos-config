@@ -3,10 +3,12 @@
   user,
   lib,
   stdenv,
+  inputs,
   ...
 }:
 {
-  imports = [./hyprland.nix 
+  imports = [
+  ./hyprland.nix 
   ./services.nix 
   ./programs.nix 
   # ./stylix.nix 
@@ -33,6 +35,10 @@
   home.packages = with pkgs;[
     gnome.nautilus
     killall
+    cope
+    fd
+    prismlauncher
+    jellyfin-mpv-shim
     moonlight-qt
     neofetch
     hyfetch

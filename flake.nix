@@ -14,6 +14,8 @@
       url = "github:hyprwm/hyprland-plugins";
       # inputs.hyprland.follows = "hyprland";
     };
+    xdph.url = "github:hyprwm/xdg-desktop-portal-hyprland";
+    xdph.inputs.nixpkgs.follows = "nixpkgs";
     base16.url = "github:SenchoPens/base16.nix";
     stylix.inputs.base16.follows = "base16";
 #    nix-ld.url = "github:Mic92/nix-ld";
@@ -33,9 +35,10 @@
 #    nix-ld,
 #    nix-alien,
     ...
-  }: {
+  }@inputs: {
     # replace 'joes-desktop' with your hostname here.
     nixosConfigurations.${import ./hostname.nix} = nixpkgs.lib.nixosSystem {
+      specialArgs.inputs = inputs;
       specialArgs = { inherit 
       #hyprland 
       hyprland-plugins;};

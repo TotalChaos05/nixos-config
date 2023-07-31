@@ -4,6 +4,7 @@
 {
   config,
   pkgs,
+  inputs,
   ...
 }: {
   imports = [
@@ -16,10 +17,10 @@
     #./home-manager/home.nix
     #./home-manager/desktops/gnome.nix
   ];
-  virtualisation = {
-    waydroid.enable = true;
-    lxd.enable = true;
-  };
+  #virtualisation = {
+   # waydroid.enable = true;
+    #lxd.enable = true;
+  #};
   services.dbus.enable = true;
   # programs.sway.enable = true;
 
@@ -42,7 +43,7 @@
   nixpkgs.config = {
     allowUnfree = true;
   };
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     (nerdfonts.override {fonts = ["FiraCode" "DroidSansMono"];})
   ];
   programs.steam.enable = true;
