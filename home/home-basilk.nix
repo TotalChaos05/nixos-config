@@ -37,6 +37,7 @@
     killall
     cope
     fd
+    qmmp
     prismlauncher
     jellyfin-mpv-shim
     moonlight-qt
