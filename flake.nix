@@ -7,12 +7,12 @@
 
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    # hyprland.url = "github:hyprwm/Hyprland";
-    # hyprland.inputs.nixpkgs.follows = "nixpkgs";
+    hyprland.url = "github:hyprwm/Hyprland";
+    #hyprland.inputs.nixpkgs.follows = "nixpkgs";
     stylix.url = "github:danth/stylix";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
-      # inputs.hyprland.follows = "hyprland";
+      inputs.hyprland.follows = "hyprland";
     };
     xdph.url = "github:hyprwm/xdg-desktop-portal-hyprland";
     xdph.inputs.nixpkgs.follows = "nixpkgs";
