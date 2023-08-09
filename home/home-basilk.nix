@@ -11,7 +11,7 @@
   ./hyprland.nix 
   ./services.nix 
   ./programs.nix 
-  # ./stylix.nix 
+  ./stylix.nix 
   ./gtk.nix
   ];
     programs.git = {
@@ -39,7 +39,7 @@
     fd
     qmmp
     prismlauncher
-    jellyfin-mpv-shim
+    # jellyfin-mpv-shim
     moonlight-qt
     neofetch
     hyfetch
@@ -77,6 +77,8 @@
       ".config/cava/config".source = dotfiles/cava/config;
     
       };
+      username = "basilk";
+      homeDirectory = "/home/basilk";
     };
 
   home.stateVersion = "23.05"; # Please read the comment before changing.

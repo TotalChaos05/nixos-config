@@ -5,9 +5,10 @@
   home-manager, 
   inputs, 
   stateVersion, 
-  hostname, 
+  hostname,
+  user,
   # hyprland,
-  hyprland-plugins,
+#  hyprland-plugins,
   #pkgs-stable,
   ...
 }: 
@@ -16,8 +17,9 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs stateVersion hostname pkgs #hyprland 
-    hyprland-plugins; };
+    extraSpecialArgs = { inherit inputs stateVersion hostname pkgs; #hyprland 
+    # hyprland-plugins; 
+    };
     users.basilk = {
       imports = [
         # hyprland.homeManagerModules.default

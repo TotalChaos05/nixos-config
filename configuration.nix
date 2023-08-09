@@ -11,16 +11,15 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./stylix.nix
-    ./home
     ./virt.nix
 #    ./nix-ld.nix
     #./home-manager/home.nix
     #./home-manager/desktops/gnome.nix
   ];
-  virtualisation = {
-    waydroid.enable = true;
-    lxd.enable = true;
-  };
+  #virtualisation = {
+  #  waydroid.enable = true;
+  #  lxd.enable = true;
+  #};
   services.dbus.enable = true;
   services.gvfs.enable = true;
   services.tlp.enable = true;
