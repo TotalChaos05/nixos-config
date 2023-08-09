@@ -17,24 +17,18 @@
     #./home-manager/home.nix
     #./home-manager/desktops/gnome.nix
   ];
-  #virtualisation = {
-   # waydroid.enable = true;
-    #lxd.enable = true;
-  #};
+  virtualisation = {
+    waydroid.enable = true;
+    lxd.enable = true;
+  };
   services.dbus.enable = true;
-  # programs.sway.enable = true;
-
-  # tlp
+  services.gvfs.enable = true;
   services.tlp.enable = true;
-
-  # Allow unfree packages
   security.pam.services.swaylock = {};
   programs.dconf.enable = true;
   programs.fish.enable = true;
   users.users.basilk.shell = pkgs.fish;
-  
   programs.ssh.startAgent = true;
-
   nixpkgs.config.permittedInsecurePackages = [
     "openssl-1.1.1u"
   ];
@@ -181,7 +175,7 @@
   };
 
 
-  environment.systemPackages = [pkgs.firefox-devedition-bin pkgs.emptty];
+  environment.systemPackages = [pkgs.firefox-devedition-bin pkgs.home-manager];
   /*
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
