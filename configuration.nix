@@ -26,6 +26,7 @@
   security.pam.services.swaylock = {};
   programs.dconf.enable = true;
   programs.fish.enable = true;
+  fonts.fontconfig.enable = true;
   users.users.basilk.shell = pkgs.fish;
   programs.ssh.startAgent = true;
   nixpkgs.config.permittedInsecurePackages = [
@@ -36,9 +37,18 @@
   nixpkgs.config = {
     allowUnfree = true;
   };
+
+  fonts.enableDefaultFonts = true;
   fonts.packages = with pkgs; [
     (nerdfonts.override {fonts = ["FiraCode" "DroidSansMono"];})
+    noto-fonts
+    noto-fonts-extra
+    noto-fonts-cjk
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+    noto-fonts-lgc-plus
   ];
+  
   programs.steam.enable = true;
 
   networking.networkmanager.enable = true;
@@ -59,8 +69,8 @@
   };
   # Hyprland Cachix
   nix.settings = {
-    substituters = ["https://hyprland.cachix.org"];
-    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+    substituters = ["https://hyprland.cachix.org" "https://helix.cachix.org"];
+    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="];
   };
 
   # Use the systemd-boot EFI boot loader.
@@ -128,7 +138,7 @@
   };
   security.polkit.enable = true;
   xdg.portal = {
-    extraPortals = [pkgs.xdg-desktop-portal-gtk];
+    extraPortals = [pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr];
   };
   services.logind = {
     extraConfig = "HandlePowerKey=suspend";
@@ -161,7 +171,6 @@
   in [ myOverlay ];
 
 
-
   
   hardware.opengl = {
     enable = true;
@@ -170,11 +179,12 @@
       vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       vaapiVdpau
       libvdpau-va-gl
+      mesa_drivers
     ];
   };
 
 
-  environment.systemPackages = [pkgs.firefox-devedition-bin pkgs.home-manager];
+  environment.systemPackages = [pkgs.firefox-devedition-bin pkgs.home-manager pkgs.comma];
   /*
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.

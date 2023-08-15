@@ -35,18 +35,18 @@
   #stylix.autoEnable = true;
     stylix.fonts = {
     serif = {
-      package = pkgs.dejavu_fonts;
-      name = "DejaVu Serif";
+      package = pkgs.noto-fonts;
+      name = "Noto Serif";
     };
 
     sansSerif = {
-      package = pkgs.dejavu_fonts;
-      name = "DejaVu Sans";
+      package = pkgs.noto-fonts;
+      name = "Noto Sans";
     };
 
     monospace = {
-      package = pkgs.dejavu_fonts;
-      name = "DejaVu Sans Mono";
+      package = pkgs.noto-fonts;
+      name = "Noto Sans Mono";
     };
 
     emoji = {

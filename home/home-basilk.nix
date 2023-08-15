@@ -8,7 +8,8 @@
 }:
 {
   imports = [
-  ./hyprland.nix 
+  # ./hyprland.nix 
+  ./sway.nix
   ./services.nix 
   ./programs.nix 
   ./stylix.nix 
@@ -19,7 +20,7 @@
     userName = "Basil Keeler";
     userEmail = "basil.keeler@outlook.com";
   };
-
+  xdg.enable = true;
   programs.vscode = {
     enable = true;
     package = pkgs.vscodium.fhs;
@@ -35,17 +36,22 @@
   home.packages = with pkgs;[
     gnome.nautilus
     killall
-    cope
+    # cope
     fd
     qmmp
     prismlauncher
     # jellyfin-mpv-shim
+    brightnessctl
     moonlight-qt
     neofetch
     hyfetch
     cava
     pavucontrol
-    discord
+    (discord.override {
+      withOpenASAR = true;
+      withVencord = true;
+    })
+
     exercism
     ntfsprogs
     qt6.full
@@ -53,7 +59,10 @@
     wdisplays
     gcc
     rustup
-    swaynotificationcenter
+    (swaynotificationcenter.overrideAttrs (oldAttrs: {
+      mesonFlags =  ["-Dscripting=false"];
+    }))
+    
     amberol
     obsidian
     syncthingtray
@@ -113,6 +122,7 @@
   home.sessionVariables = {
     # EDITOR = "emacs";
     MOZ_ENABLE_WAYLAND = 1;
+    FLAKE = "/home/basilk/nixos-config";
   };
   systemd.user.targets.tray = {
 		Unit = {

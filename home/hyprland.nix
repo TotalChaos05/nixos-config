@@ -3,9 +3,10 @@
 imports = [./wlr-shared.nix];
   home.packages = [
     pkgs.libva
-    inputs.xdph.packages.x86_64-linux.xdg-desktop-portal-hyprland
+    # inputs.xdph.packages.x86_64-linux.xdg-desktop-portal-hyprland
   ];
 services.swayidle.systemdTarget = "hyprland-session.target";
+  programs.waybar.settings.mainBar."modules-center" = ["hyprland/window"];
 wayland.windowManager.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.x86_64-linux.hyprland;
@@ -242,9 +243,7 @@ bindm = $mainMod, mouse:273, resizewindow
 
 exec systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP
 #exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=Hyprland
-env = XDG_CURRENT_DESKTOP, Hyprland
-env = XDG_SESSION_TYPE, Hyprland
-env = XDG_SESSION_DESKTOP, Hyprland   
+env = XDG_CURRENT_DESKTOP, sway
 
     '';
 };

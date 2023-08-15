@@ -10,7 +10,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     hyprland.url = "github:hyprwm/Hyprland";
     #hyprland.inputs.nixpkgs.follows = "nixpkgs";
-    stylix.url = "github:danth/stylix";
+    stylix.url = "github:totalchaos05/stylix/hyprland";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
@@ -23,6 +23,9 @@
       url = "github:viperML/nh";
       inputs.nixpkgs.follows = "nixpkgs"; # override this repo's nixpkgs snapshot
     };
+    helix.url = "github:helix-editor/helix";
+    nix-index-database.url = "github:Mic92/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 #    nix-ld.url = "github:Mic92/nix-ld";
 #    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
 #    nix-alien.url = "github:thiagokokada/nix-alien";
@@ -36,6 +39,7 @@
     hyprland-plugins,
     nixpkgs-stable,
     nur,
+    nix-index-database,
     
 #    nix-ld,
 #    nix-alien,
@@ -67,8 +71,7 @@
         stylix.nixosModules.stylix
         ./configuration.nix
         #home-manager.nixosModules.home-manager
-	      inputs.nh.nixosModules.default
-
+        inputs.nh.nixosModules.default
         {
 	        nh = {
             enable = true;
@@ -89,6 +92,12 @@
       modules = [
         ./home/home-basilk.nix 
         stylix.homeManagerModules.stylix
+        nix-index-database.hmModules.nix-index
+        {
+          programs.nix-index-database.comma.enable = true;
+          programs.nix-index.enable = true;
+
+        }
         ];
       pkgs = pkgs;
       extraSpecialArgs = { inherit hostname inputs stateVersion pkgs; };

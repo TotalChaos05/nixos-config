@@ -1,4 +1,4 @@
-{pkgs, lib, ...}:
+{pkgs, lib, inputs, ...}:
 {
   programs.fzf = {
     enable = true;
@@ -12,6 +12,7 @@
   };
   # programs.starship.enable = true;
   programs.helix.enable = true;
+  programs.helix.package = inputs.helix.packages.x86_64-linux.helix;
   programs.helix.settings = {
     editor.cursor-shape = {
       insert = "bar";
