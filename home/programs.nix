@@ -19,6 +19,18 @@
       normal = "block";
       select = "underline";
     };
+    editor.auto-completion = true;
+    editor.lsp = {
+      display-messages = true;
+      display-inlay-hints = true;
+    };
+    keys.normal = {
+      space.space = "file_picker";
+      space.w = ":w";
+      space.q = ":q";
+      space.x = ":x";
+      esc = [ "collapse_selection" "keep_primary_selection" ];
+    };
   };
   programs.imv.enable = true;
   programs.thunderbird = {

@@ -18,7 +18,7 @@
   boot.extraModulePackages = [];
   boot.supportedFilesystems = ["ntfs"];
 
-  fileSystems."/" = {
+    fileSystems."/" = {
     device = "/dev/mapper/enc";
     fsType = "btrfs";
     options = ["subvol=root"];

@@ -33,8 +33,13 @@
       ];  
     };
     extraConfig = ''
+      default_border pixel 1
+      default_floating_border normal
+      # hide_edge_borders smart
+      # smart_gaps on
       set $mod Mod4
-      exec_always autotiling -w 1 3 5 7 9
+      exec_always swaybg ~/.wallpaper.png
+      exec_always autotiling 
       unbindsym $mod+shift+q
       corner_radius 5
       gaps inner 10

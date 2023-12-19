@@ -1,0 +1,3 @@
+[output]
+channels = mono
+mono_option = average

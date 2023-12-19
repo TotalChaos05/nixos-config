@@ -14,6 +14,7 @@
   ./programs.nix 
   ./stylix.nix 
   ./gtk.nix
+  # ./eww
   ];
     programs.git = {
     enable = true;
@@ -37,9 +38,13 @@
     gnome.nautilus
     killall
     # cope
+    swaybg
+    bottles
     fd
     qmmp
     prismlauncher
+    dwarfs
+    gamescope
     # jellyfin-mpv-shim
     brightnessctl
     moonlight-qt
@@ -55,7 +60,6 @@
     exercism
     ntfsprogs
     qt6.full
-    swaybg
     wdisplays
     gcc
     rustup

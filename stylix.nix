@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   ...
 }: {
   stylix.fonts = {
@@ -30,6 +31,6 @@
   stylix.targets.grub.enable = true;
   #stylix.targets.gdm.enable = true;
   stylix.targets.gtk.enable = true;
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
+  stylix.base16Scheme = "${inputs.base16-schemes}/catppuccin-macchiato.yaml";
   stylix.autoEnable = true;
 }

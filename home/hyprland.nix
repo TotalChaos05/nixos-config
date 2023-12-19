@@ -14,7 +14,6 @@ wayland.windowManager.hyprland = {
     systemdIntegration = true;
     xwayland = {
       enable = true;
-      hidpi = true;
     };
 
     plugins = [ 

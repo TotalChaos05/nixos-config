@@ -23,6 +23,10 @@
   services.dbus.enable = true;
   services.gvfs.enable = true;
   services.tlp.enable = true;
+  services.earlyoom = {
+    enable = true;
+    enableNotifications = true;
+  };
   security.pam.services.swaylock = {};
   programs.dconf.enable = true;
   programs.fish.enable = true;
@@ -39,7 +43,7 @@
   };
 
   fonts.enableDefaultFonts = true;
-  fonts.packages = with pkgs; [
+  fonts.fonts = with pkgs; [
     (nerdfonts.override {fonts = ["FiraCode" "DroidSansMono"];})
     noto-fonts
     noto-fonts-extra
@@ -48,9 +52,8 @@
     noto-fonts-cjk-serif
     noto-fonts-lgc-plus
   ];
-  
+  environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
   programs.steam.enable = true;
-
   networking.networkmanager.enable = true;
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
@@ -107,7 +110,7 @@
 
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
-
+  # services.xserver.videoDrivers = [ "intel" ];
   # Enable the GNOME Desktop Environment.
   # services.xserver.displayManager.gdm.enable = true;
   #services.xserver.desktopManager.gnome.enable = true;
@@ -130,7 +133,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.basilk = {
     isNormalUser = true;
-    extraGroups = ["wheel" "networkmanager"]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel" "networkmanager" "render" "video"]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       firefox
       tree
@@ -161,17 +164,14 @@
         visualizerSupport = true;
         clockSupport = true;
       };
-    };
-    intelStuff = self:
-      pkgs {
-        vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
-      };
+    #intelStuff = super.vaapiIntel.override {
+    #  enableHybridCodec = true;
+    #};
+  };
 
   
   in [ myOverlay ];
 
-
-  
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [
@@ -182,9 +182,9 @@
       mesa_drivers
     ];
   };
+  
 
-
-  environment.systemPackages = [pkgs.firefox-devedition-bin pkgs.home-manager pkgs.comma];
+  environment.systemPackages = [pkgs.firefox-devedition-bin pkgs.home-manager pkgs.comma  pkgs.vulkan-validation-layers ];
   /*
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
