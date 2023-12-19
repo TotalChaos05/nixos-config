@@ -1,5 +1,5 @@
 {pkgs,lib, ...}:
-  let user = import ../user.nix; in {
+  let user = import ../../user.nix; in {
     
   services.gammastep = {
     enable = true;

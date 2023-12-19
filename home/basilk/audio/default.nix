@@ -1,13 +1,23 @@
 {pkgs, ...}: 
 {
   home.packages = with pkgs; [
+    yabridge
+    yabridgectl
     lsp-plugins
+    surge-XT
+    bespokesynth
     drumkv1
     geonkick
     x42-avldrums
     sooperlooper
     hydrogen
     samplebrain
+    ninjas2
+    cardinal
+    sfizz
+    zynaddsubfx
+    helm
+    odin2
     ninjas2
     airwindows-lv2
     rkrlv2

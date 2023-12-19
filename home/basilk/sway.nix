@@ -3,7 +3,7 @@
   imports = [./wlr-shared.nix ./waybar.nix];
   home.packages = [pkgs.autotiling];
   home.sessionVariables = {
-    XDG_CURRENT_DESKTOP = "sway";
+    # XDG_CURRENT_DESKTOP = "sway";
   };
   programs.waybar.settings.mainBar."modules-left" = lib.mkForce ["sway/workspaces" "sway/mode" "sway/scratchpad"]; 
   wayland.windowManager.sway = {
@@ -13,7 +13,7 @@
     package = pkgs.swayfx;
     config = rec {
       modifier = "Mod4";
-      terminal = "foot";
+      terminal = "kitty";
       menu = "rofi -show combi -combi-modes drun#run - modes combi";
       focus.mouseWarping = true;
       input = {
@@ -35,9 +35,13 @@
       ];  
     };
     extraConfig = ''
-      for_window [title="^ncmpcpp*"] floating enable
-      for_window [class="REAPER"] floating enable
 
+    
+      # for_window [title="^ncmpcpp*"] floating enable
+      for_window [class="REAPER" instance="REAPER"] floating enable 
+      for_window [app_id="firefox" title="^Picture-in-Picture$"] border none, floating enable, sticky enable
+      
+      # for_window [class="REAPER" instance="REAPER" title="^REAPER v*"] fullscreen enable
       default_border pixel 1
       default_floating_border normal
       # hide_edge_borders smart
@@ -47,10 +51,12 @@
       exec_always autotiling 
       unbindsym $mod+shift+q
       corner_radius 5
-      gaps inner 10
+      gaps inner 5
       bindgesture swipe:right workspace prev
       bindgesture swipe:left workspace next
       bindsym Print exec grim -g "$(slurp)" - | wl-copy -t image/png
+      bindsym $mod+shift+d exec kaokao --files ~/kaomoji.csv| wl-copy
+      bindsym $mod+c sticky toggle
       bindsym $mod+q kill
       bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
       bindsym XF86MonBrightnessUp exec brightnessctl set 5%+

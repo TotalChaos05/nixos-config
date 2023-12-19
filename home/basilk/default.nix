@@ -13,7 +13,7 @@
   ...
 }: 
   
-  let user = import ../user.nix; in {
+  let user = import ../../user.nix; in {
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;

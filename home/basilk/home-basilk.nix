@@ -15,9 +15,10 @@
   ./stylix.nix 
   ./gtk.nix
   ./audio
+  # ./nix-ld.nix
   # ./eww
   ];
-    programs.git = {
+  programs.git = {
     enable = true;
     userName = "Basil Keeler";
     userEmail = "basil.keeler@outlook.com";
@@ -36,18 +37,40 @@
   };
   # programs.fish.interactiveShellInit = "exec hilbish";
   home.packages = with pkgs; [
-    nemo
+    (pkgs.callPackage (import ./audio/bitwig.nix) {})
+    tealdeer #tldr thing
+    miniplayer
+    fd
+    wineWow64Packages.stagingFull
+    gamescope
+    distrobox
+    heroic
+    kitty
+    python3
+    gnome.file-roller
+    gnome.sushi
+    gnome.nautilus-python
+    gnome.nautilus
+    rustup
+    jetbrains-toolbox
+    jetbrains.rust-rover
+    clang
+    mold-wrapped
+    nautilus-open-any-terminal
+    qbittorrent
     killall
-    (callPackage (import ./audio/bitwig.nix) {})
+    appimage-run
     ludusavi
     cloudflare-warp
-    guitarix
+    # guitarix
     jellyfin-media-player
+    lollypop
     grim
     slurp
     wl-clipboard
+    tauon
     # cope
-    vcv-rack
+    # vcv-rack
     swaybg
     bottles
     prismlauncher
@@ -66,15 +89,11 @@
     (swaynotificationcenter.overrideAttrs (oldAttrs: {
       mesonFlags =  ["-Dscripting=false"];
     }))
-    obsidian
+    # obsidian
     syncthingtray
     syncthing
     lapce
     mpdevil
-    
-    wob
-    sov
-    iwgtk
     brightnessctl
     terminus_font
     ubuntu_font_family
@@ -82,6 +101,8 @@
     wlogout
     zsh
     gnome.gnome-system-monitor
+  ] ++ [
+    inputs.kaokao.packages.${pkgs.system}.default
   ];
   home = {
     file = {
@@ -96,7 +117,7 @@
       ".config/hypr/macchiato.conf".source = dotfiles/hypr/macchiato.conf;
       ".config/hypr/latte.conf".source = dotfiles/hypr/latte.conf;
       ".config/cava/config".source = dotfiles/cava/config;
-      ".local/share/applications/helix.desktop".source = ../assets/helix.desktop;
+      ".local/share/applications/helix.desktop".source = ../../assets/helix.desktop;
     
       };
       username = "basilk";
@@ -137,24 +158,14 @@
     MOZ_ENABLE_WAYLAND = 1;
     FLAKE = "/home/basilk/nixos-config";
   };
-  systemd.user.targets.tray = {
-    Unit = {
-      Description = "Home Manager System Tray";
-		Requires = [ "graphical-session-pre.target" ];
-    };
-  };
+
   systemd = {
-    user.services.polkit-gnome-authentication-agent-1 = {
-      description = "polkit-gnome-authentication-agent-1";
-      wantedBy = [ "graphical-session.target" ];
-      wants = [ "graphical-session.target" ];
-      after = [ "graphical-session.target" ];
-      serviceConfig = {
-        Type = "simple";
-        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-        Restart = "on-failure";
-        RestartSec = 1;
-        TimeoutStopSec = 10;
+    user = {
+      targets.tray = {
+        Unit = {
+          Description = "Home Manager System Tray";
+		      Requires = [ "graphical-session-pre.target" ];
+        };
       };
     };
   };

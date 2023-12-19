@@ -13,13 +13,14 @@
       mainBar = {
         "layer" = "top"; # Waybar at top layer
         "position" = "top"; # Waybar position (top|bottom|left|right)
-        #"height" = 30; # Waybar height (to be removed for auto height)
+        # "height" = 5; # Waybar height (to be removed for auto height)
         # "width" = 1280; # Waybar width
         "spacing" = 4; # Gaps between modules (4px)
         # Choose the order of the modules
         "modules-left" = ["wlr/workspaces" "sway/mode" "sway/scratchpad"]; #"custom/media"];
+        
         "modules-center" = ["sway/window"];
-        "modules-right" = ["mpris" "idle_inhibitor" "pulseaudio" "network" "cpu" "memory" "temperature" "backlight" "keyboard-state" "sway/language" "battery" "battery#bat2" "clock" "tray"];
+        "modules-right" = ["mpris" "idle_inhibitor" "pulseaudio" "network" "cpu" "memory" "temperature" "backlight" "battery" "battery#bat2" "clock" "tray"];
         # Modules configuration
         # "sway/workspaces" = {
         #     "disable-scroll" = true;
@@ -137,7 +138,8 @@
         };
         "network" = {
           # "interface" = "wlp2*"; # (Optional) To force the use of this interface
-          "format-wifi" = "{essid} ({signalStrength}%) ";
+#          "format-wifi" = "{essid} ({signalStrength}%) ";
+          "format-wifi" = "({signalStrength}%) ";
           "format-ethernet" = "{ipaddr}/{cidr} ";
           "tooltip-format" = "{ifname} via {gwaddr} ";
           "format-linked" = "{ifname} (No IP) ";
@@ -146,7 +148,8 @@
         };
         "pulseaudio" = {
           # "scroll-step" = 1; # %, can be a float
-          "format" = "{volume}% {icon} {format_source}";
+#          "format" = "{volume}% {icon} {format_source}";
+          "format" = "{volume}% {icon}";
           "format-bluetooth" = "{volume}% {icon} {format_source}";
           "format-bluetooth-muted" = " {icon} {format_source}";
           "format-muted" = " {format_source}";
@@ -175,12 +178,42 @@
         #        #"exec" = "$HOME/.config/waybar/mediaplayer.py 2> /dev/null"; # Script in resources folder
         #        # "exec" = "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null"; # Filter player based on name
         #    };
+        "mpris" = {
+          "dynamic-len" = 20;
+          "format" = /*"{status_icon}*/" {dynamic}";
+          "status-icons" = {
+            "playing" = "⏵︎"; 
+            "paused" = "⏸︎"; 
+            "stopped" = "⏹︎";
+            };
+        };
       };
     };
-    style = ''
+    style =  ''
+    
       * {
         font-size: 12px;
-      }
+        }
+        /* Each module */
+#battery,
+#clock,
+#cpu,
+#language,
+#memory,
+#mode,
+#network,
+#pulseaudio,
+#temperature,
+#tray,
+#backlight,
+#idle_inhibitor,
+#disk,
+#user,
+#mpris {
+	padding-left: 8pt;
+	padding-right: 8pt;
+}
+      
     '';
   };
 }

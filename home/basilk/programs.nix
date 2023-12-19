@@ -1,63 +1,74 @@
 {pkgs, lib, inputs, ...}:
 {
-  programs.fzf = {
+  programs = {
+  fzf = {
     enable = true;
   };
-  programs.direnv.nix-direnv.enable = true;
-  programs.direnv.enable = true;
-  programs.qutebrowser.enable = true;
-  programs.bat.enable = true;
-  programs.foot.enable = true;
-  programs.wlogout = {
+  kitty = {
+    enable = true;
+    settings = {
+      confirm_os_window_close = 0;
+    };
+  };
+  direnv.nix-direnv.enable = true;
+  direnv.enable = true;
+  qutebrowser.enable = true;
+  bat.enable = true;
+  foot.enable = true;
+  wlogout = {
     enable = true;
   };
-  programs.rbw = {
+  rbw = {
     enable = true;
   };
-  # programs.starship.enable = true;
-  programs.wezterm.enable = true;
-  programs.nnn.package = (pkgs.nnn.override { withNerdIcons = true; });
-  programs.nnn.plugins = {
-    mappings = {
-    p = "preview-tui";
-    };
-    src = 
-    (pkgs.fetchFromGitHub {
-  owner = "jarun";
-  repo = "nnn";
-  rev = "v4.8";
-  sha256 = "QbKW2wjhUNej3zoX18LdeUHqjNLYhEKyvPH2MXzp/iQ=";
-}) + "/plugins";
-  };
-  programs.nnn.enable = true;
-  programs.helix.enable = true;
-  programs.helix.package = inputs.helix.packages.x86_64-linux.helix;
-  programs.helix.settings = {
-    editor.cursor-shape = {
-      insert = "bar";
-      normal = "block";
-      select = "underline";
-    };
-    editor.auto-completion = true;
-    editor.lsp = {
-      display-messages = true;
-      display-inlay-hints = true;
-    };
-    keys.normal = {
-      space.space = "file_picker";
-      space.w = ":w";
-      space.q = ":q";
-      space.x = ":x";
-      esc = [ "collapse_selection" "keep_primary_selection" ];
+  # starship.enable = true;
+  wezterm.enable = true;
+  nnn = {
+    enable = true;
+    package = (pkgs.nnn.override { withNerdIcons = true; });
+    plugins = {
+      mappings = {
+        p = "preview-tui";
+      };
+      src = (pkgs.fetchFromGitHub {
+        owner = "jarun";
+        repo = "nnn";
+        rev = "v4.8";
+        sha256 = "QbKW2wjhUNej3zoX18LdeUHqjNLYhEKyvPH2MXzp/iQ=";
+      }) + "/plugins";
     };
   };
-  programs.imv.enable = true;
-  programs.thunderbird = {
+  
+  helix = {
+    enable = true;
+    package = inputs.helix.packages.x86_64-linux.helix;
+    settings = {
+      editor.cursor-shape = {
+        insert = "bar";
+        normal = "block";
+        select = "underline";
+      };
+      editor.auto-completion = true;
+      editor.lsp = {
+        display-messages = true;
+        display-inlay-hints = true;
+      };
+      keys.normal = {
+        space.space = "file_picker";
+        space.w = ":w";
+        space.q = ":q";
+        space.x = ":x";
+        esc = [ "collapse_selection" "keep_primary_selection" ];
+      };
+    };
+  };
+  imv.enable = true;
+  thunderbird = {
     enable = true;
     package = pkgs.thunderbird;
     profiles = {};
   };
-  programs.ncmpcpp = {
+  ncmpcpp = {
     enable = true;
     settings = {
       visualizer_data_source = "/tmp/mpd.fifo";
@@ -65,10 +76,11 @@
       visualizer_in_stereo = "yes";
       media_library_primary_tag = "album_artist";
     };
+    package = pkgs.ncmpcpp.override { visualizerSupport = true; clockSupport = true; };
   };
-  programs.mpv.enable = true;
-  programs.yt-dlp.enable = true;
-  programs.fish = {
+  mpv.enable = true;
+  yt-dlp.enable = true;
+  fish = {
     enable = true;
     interactiveShellInit = "printf '\\033[0;32muse Ctrl+Alt+F for file finder !\\033[0m\\n'";
     plugins = 
@@ -96,14 +108,14 @@
         src = pkgs.fetchFromGitHub {
           owner = "IlanCosman";
           repo = "tide";
-          rev = "v5.6.0";
+          rev = "v6.0.1";
           sha256 = "cCI1FDpvajt1vVPUd/WvsjX/6BJm6X1yFPjqohmo1rI=";
         };
       }
     ];
   };
 /*
-    programs.zsh = {
+    zsh = {
     enable = true;
     plugins = [
       {
@@ -121,4 +133,5 @@
     };
   };
 */
+  };
 }

@@ -5,12 +5,17 @@
   programs.rofi = {
     enable = true;
     package = pkgs.rofi-wayland;
-    terminal = "foot";
+    terminal = "kitty";
+    plugins = [ pkgs.rofi-calc pkgs.rofimoji pkgs.rofi-top pkgs.rofi-screenshot];
+    extraConfig = {
+      modi = "window,drun,calc,ssh,run,top,";
+      combi-modes = "run,window,drun,";
+    };
   };
   programs.swaylock = {
     enable = true;
     settings = {
-      image = lib.mkDefault "~/wallpaper.png";
+      image = lib.mkDefault "~/.wallpaper.png";
       scaling = "fill";
     };
   };

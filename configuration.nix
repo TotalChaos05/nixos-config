@@ -5,6 +5,8 @@
   config,
   pkgs,
   inputs,
+  lib,
+  nix-hardware,
   ...
 }: {
   imports = [
@@ -12,17 +14,62 @@
     ./hardware-configuration.nix
     ./stylix.nix
     ./virt.nix
-#    ./nix-ld.nix
+    #./gnome.nix
     #./home-manager/home.nix
     #./home-manager/desktops/gnome.nix
   ];
+  boot.kernelPackages=pkgs.linuxPackages_lqx;
+services.xserver.displayManager.gdm.enable = true;
+
+
+  hardware.opengl.extraPackages = with pkgs; [ intel-compute-runtime ];
   #virtualisation = {
   #  waydroid.enable = true;
   #  lxd.enable = true;
   #};
+  security.pki.certificateFiles = [ "/home/basilk/Cloudflare-CA.pem" ];
+  virtualisation = {
+    podman = {
+      enable = true;
+
+      # Create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
+
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+      # For Nixos version > 22.11
+      #defaultNetwork.settings = {
+      #  dns_enabled = true;
+      #};
+    };
+  };
+  # allows access to rpi pico
+  services.udev.extraRules = ''
+SUBSYSTEM=="usb", \
+ATTRS{idVendor}=="2e8a", \
+ATTRS{idProduct}=="0003", \
+MODE="660", \
+GROUP="dialout"
+SUBSYSTEM=="usb", \
+ATTRS{idVendor}=="2e8a", \
+ATTRS{idProduct}=="000a", \
+MODE="660", \
+GROUP="dialout"
+SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", MODE="0666", GROUP="dialout"
+'';
+  # Print service
+  services.printing.drivers = [ pkgs.epson-escpr ];
+  services.printing.enable = true;
+services.avahi = {
+  enable = true;
+  nssmdns = true;
+  openFirewall = true;
+};
+
   services.dbus.enable = true;
   services.gvfs.enable = true;
-  services.tlp.enable = true;
+  # services.tlp.enable = true;
+  services.auto-cpufreq.enable = true;
   services.earlyoom = {
     enable = true;
     enableNotifications = true;
@@ -33,8 +80,11 @@
   fonts.fontconfig.enable = true;
   users.users.basilk.shell = pkgs.fish;
   programs.ssh.startAgent = true;
+  nixpkgs.config.permitInsecurePackages = true;
   nixpkgs.config.permittedInsecurePackages = [
     "openssl-1.1.1u"
+    "electron-24.8.6"
+    
   ];
 
   hardware.pulseaudio.enable = false;
@@ -55,13 +105,12 @@
   environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
   programs.steam.enable = true;
   networking.networkmanager.enable = true;
-  hardware.bluetooth.enable = true;
+
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
   services.blueman.enable = true;
-  hardware.bluetooth.settings = {
-    General = {
-      Enable = "Media,Socket,Sink,Source";
-    };
-  };
+  
+  
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -70,10 +119,9 @@
     # If you want to use JACK applications, uncomment this
     jack.enable = true;
   };
-  # Hyprland Cachix
   nix.settings = {
-    substituters = ["https://hyprland.cachix.org" "https://helix.cachix.org"];
-    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="];
+    substituters = ["https://hyprland.cachix.org" "https://nix-community.cachix.org" "https://helix.cachix.org" "https://nix-gaming.cachix.org"];
+    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs=" "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4=" "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="];
   };
 
   # Use the systemd-boot EFI boot loader.
@@ -133,16 +181,19 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.basilk = {
     isNormalUser = true;
-    extraGroups = ["wheel" "networkmanager" "render" "video"]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel" "networkmanager" "render" "video" "dialout" "realtime" "audio"]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       firefox
       tree
     ];
   };
   security.polkit.enable = true;
-  xdg.portal = {
-    extraPortals = [pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr];
+  xdg.portal = { 
+    enable = true;
+    wlr.enable = true;
   };
+
+  xdg.portal.extraPortals = lib.mkIf (config.services.xserver.desktopManager.gnome.enable == false) [pkgs.xdg-desktop-portal-gtk]; 
   services.logind = {
     extraConfig = "HandlePowerKey=suspend";
     lidSwitch = "suspend";
@@ -159,32 +210,23 @@
       discord = super.discord.override {
         withOpenASAR = true;
         withVencord = true;
-      };
+        };
       ncmpcpp = super.ncmpcpp.override {
         visualizerSupport = true;
         clockSupport = true;
       };
-    #intelStuff = super.vaapiIntel.override {
-    #  enableHybridCodec = true;
-    #};
+      vaapiIntel = super.vaapiIntel.override {
+        enableHybridCodec = true;
+      };
   };
 
   
   in [ myOverlay ];
 
-  hardware.opengl = {
-    enable = true;
-    extraPackages = with pkgs; [
-      intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
-      vaapiVdpau
-      libvdpau-va-gl
-      mesa_drivers
-    ];
-  };
-  
 
-  environment.systemPackages = [pkgs.firefox-devedition-bin pkgs.home-manager pkgs.comma  pkgs.vulkan-validation-layers ];
+  environment.systemPackages = [pkgs.firefox-devedition-bin pkgs.home-manager pkgs.comma  pkgs.vulkan-validation-layers pkgs.libva-utils ];
+  
+  
   /*
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.

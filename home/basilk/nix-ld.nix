@@ -112,6 +112,8 @@
     # FIXME: how do we even fix this correctly
     attr
     ];
-  home.sessionVariables.NIX_LD = lib.fileContents "${stdenv.cc}/nix-support/dynamic-linker";
+  home.sessionVariables.NIX_LD =   pkgs.runCommand "ld.so" {} ''
+    ln -s "$(cat '${pkgs.stdenv.cc}/nix-support/dynamic-linker')" $out
+  '';
 
 }
