@@ -1,10 +1,4 @@
-{
-  config,
-  pkgs,
-  lib,
-  inputs,
-  ...
-}: {
+{ config, pkgs, lib, inputs, ... }: {
   stylix.fonts = {
     serif = {
       package = pkgs.dejavu_fonts;
@@ -26,11 +20,11 @@
       name = "Noto Color Emoji";
     };
   };
-  stylix.image = ./assets/wallpaper.png;
-  stylix.targets.console.enable = true;
-  stylix.targets.grub.enable = true;
+  # stylix.targets.console.enable = false;
+  stylix.image = ../../assets/wallpaper.png;
   #stylix.targets.gdm.enable = true;
   stylix.targets.gtk.enable = true;
-  stylix.base16Scheme = "${inputs.base16-schemes}/catppuccin-macchiato.yaml";
+  stylix.polarity = "dark";
+  stylix.base16Scheme = "${inputs.base16-schemes}/rose-pine.yaml";
   stylix.autoEnable = true;
 }

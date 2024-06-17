@@ -1,12 +1,7 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: 
-let 
-  opacity = 1.0; 
+{ config, pkgs, lib, ... }:
+let opacity = 1.0;
 in {
+  stylix.enable = true;
   stylix.targets.swaylock.enable = true;
   #programs.swaylock = {
   #  enable = true;
@@ -19,7 +14,8 @@ in {
   #stylix.targets.console.enable = true;
   #stylix.targets.grub.enable = true;
   #stylix.targets.gtk.enable = true;
-  #stylix.targets.foot.enable = true;
+  stylix.targets.foot.enable = true;
+  stylix.targets.fish.enable = true;
   # Stylix targets
   #stylix.targets.gnome.enable = true;
   #stylix.targets.gtk.enable = true;
@@ -32,19 +28,19 @@ in {
   #stylix.polarity = "dark";
   #stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/monokai.yaml";
   stylix.targets.kitty.enable = true;
-    
+
   stylix.opacity = {
     applications = opacity;
     desktop = opacity;
     popups = opacity;
     terminal = opacity;
   };
-  
+
   #stylix.image = ./wallpaper.png;
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
   #stylix.autoEnable = true;
-    stylix.fonts = {
+  stylix.fonts = {
     serif = {
       package = pkgs.noto-fonts;
       name = "Noto Serif";
@@ -69,10 +65,11 @@ in {
   #stylix.targets.gdm.enable = true;
   stylix.targets.gtk.enable = true;
   stylix.polarity = "dark";
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-frappe.yaml";
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
   stylix.autoEnable = true;
   stylix.cursor = {
-    name = "Adwaita";
+    package = pkgs.rose-pine-cursor;
+    name = "BreezeX-RosePine-Linux";
     size = 24;
   };
 }

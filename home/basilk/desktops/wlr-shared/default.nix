@@ -1,14 +1,17 @@
-
-{pkgs, lib, ...}:
-{
-  imports = [./waybar.nix];
+{ pkgs, lib, ... }: {
+  imports = [ ./waybar.nix ];
   programs.rofi = {
     enable = true;
     package = pkgs.rofi-wayland;
     terminal = "kitty";
-    plugins = [ pkgs.rofi-calc pkgs.rofimoji pkgs.rofi-top pkgs.rofi-screenshot];
+    plugins = [
+      # pkgs.rofi-calc 
+      pkgs.rofimoji
+      # pkgs.rofi-top 
+      pkgs.rofi-screenshot
+    ];
     extraConfig = {
-      modi = "window,drun,calc,ssh,run,top,";
+      modi = "window,drun,ssh,run,";
       combi-modes = "run,window,drun,";
     };
   };
@@ -19,14 +22,8 @@
     nwg-drawer
     wayfirePlugins.wf-shell
   ];
-  
-  programs.eww = {
-    enable = true;
-    configDir = ./eww;
-  };
-  programs.fuzzel = {
-    enable = true;
-  };
+
+  programs.fuzzel = { enable = true; };
   programs.swaylock = {
     enable = true;
     settings = {
@@ -42,17 +39,15 @@
         timeout = 300;
         command = "${pkgs.swaylock}/bin/swaylock -f -c 000000";
       }
-      #{
-      #  timeout = 360;
-      #  command = "${pkgs.swayfx}/bin/swaymsg output '*' dpms off";
-      #  resumeCommand = "${pkgs.swayfx}/bin/swaymsg output '*' dpms on";
-      #}
-    ];
-    events = [
       {
-        event = "before-sleep";
-        command = "${pkgs.swaylock}/bin/swaylock -F -l -f -c 000000";
+        timeout = 360;
+        command = "${pkgs.swayfx}/bin/swaymsg output '*' dpms off";
+        resumeCommand = "${pkgs.swayfx}/bin/swaymsg output '*' dpms on";
       }
     ];
+    events = [{
+      event = "before-sleep";
+      command = "${pkgs.swaylock}/bin/swaylock -F -l -f -c 000000";
+    }];
   };
 }

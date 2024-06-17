@@ -1,11 +1,4 @@
-{
-  pkgs,
-  user,
-  lib,
-  stdenv,
-  inputs,
-  ...
-}: {
+{ pkgs, user, lib, stdenv, inputs, ... }: {
   imports = [
     # ./desktops/hyprland
     ./desktops/sway
@@ -26,44 +19,54 @@
     # enable = true;
   };
 
-  programs.fish = {
-    enable = true;
-  };
+  programs.fish = { enable = true; };
   # programs.fish.interactiveShellInit = "exec hilbish";
   home.packages = with pkgs;
-    pkgs.cosmic-de ++[
-      #(pkgs.callPackage (import ./audio/bitwig.nix) {})
-      tealdeer #tldr thing
-      onagre
-      itch
-      
+  #pkgs.cosmic-de ++
+    [
+      xivlauncher
+      bitwarden-desktop
+      beeper
+      gnome.zenity
+      aria2
+      wget
+      transmission-gtk
+      httpdirfs
+
+      #fh
+      tealdeer # tldr thing
+      # onagre
+      pantheon.sideload
+
+      feishin
+      ueberzugpp
+      nomachine-client
+      doomseeker
+      zandronum
+      vesktop
+      cinny-desktop
+      newsflash
+
+      #sublime-music
+      sublime4
+
       wayfirePlugins.wf-shell
       nwg-launchers
       nwg-dock
       nwg-drawer
-      hikari
-      labwc
-      
-      helvum #qpwgraph #pipewire patchbay
-      # miniplayer # stopped building
+
+      helvum # qpwgraph #pipewire patchbay
+      miniplayer # stopped building
       workstyle
-      httpdirfs
-      ymuse
-      sublime-music
       vinegar
-      g4music
-      amberol
       gnome-extension-manager
       boohu
       brogue-ce
       bitwig-studio-cracked
       gnome-text-editor
-      mixxx
-      mindustry-wayland
       tauon
-      google-chrome
       fd
-      peazip
+      # peazip
       gamescope
       distrobox
       heroic
@@ -77,7 +80,6 @@
       jetbrains-toolbox
       #jetbrains.rust-rover
       clang
-      #mold-wrapped
       nautilus-open-any-terminal
       qbittorrent
       killall
@@ -85,7 +87,6 @@
       ludusavi
       # guitarix
       jellyfin-media-player
-      lollypop
       grim
       slurp
       wl-clipboard
@@ -95,6 +96,7 @@
       cardinal
       swaybg
       # bottles-unwrapped
+      bottles
       prismlauncher
       # jellyfin-mpv-shim
       xdg-utils
@@ -106,11 +108,12 @@
         withOpenASAR = true;
         withVencord = true;
       })
+      armcord
+
       ntfsprogs
       wdisplays
-      (swaynotificationcenter.overrideAttrs (oldAttrs: {
-        mesonFlags = ["-Dscripting=false"];
-      }))
+      (swaynotificationcenter.overrideAttrs
+        (oldAttrs: { mesonFlags = [ "-Dscripting=false" ]; }))
       obsidian
       syncthingtray
       syncthing
@@ -123,10 +126,7 @@
       wlogout
       zsh
       gnome.gnome-system-monitor
-    ]
-    ++ [
-      inputs.kaokao.packages.${pkgs.system}.default
-    ];
+    ]; # ++ [ inputs.kaokao.packages.${pkgs.system}.default ];
   home = {
     file = {
       ".wallpaper.png".source = ../../assets/wallpaper.png;
@@ -140,7 +140,8 @@
       ".config/hypr/macchiato.conf".source = dotfiles/hypr/macchiato.conf;
       ".config/hypr/latte.conf".source = dotfiles/hypr/latte.conf;
       ".config/cava/config".source = dotfiles/cava/config;
-      ".local/share/applications/helix.desktop".source = ../../assets/helix.desktop;
+      ".local/share/applications/helix.desktop".source =
+        ../../assets/helix.desktop;
     };
     username = "basilk";
     homeDirectory = "/home/basilk";
@@ -186,7 +187,7 @@
       targets.tray = {
         Unit = {
           Description = "Home Manager System Tray";
-          Requires = ["graphical-session-pre.target"];
+          Requires = [ "graphical-session-pre.target" ];
         };
       };
     };

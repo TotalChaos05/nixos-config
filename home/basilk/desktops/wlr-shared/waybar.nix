@@ -1,14 +1,10 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: {
+{ config, pkgs, lib, inputs, ... }: {
   programs.waybar = {
     enable = true;
-    package = pkgs.waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ ["-Dexperimental=true"];
-    });
+    package = inputs.waybar.packages.${pkgs.system}.waybar.overrideAttrs
+      (oldAttrs: {
+        mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+      });
     settings = {
       mainBar = {
         "layer" = "top"; # Waybar at top layer
@@ -17,10 +13,29 @@
         # "width" = 1280; # Waybar width
         "spacing" = 4; # Gaps between modules (4px)
         # Choose the order of the modules
-        "modules-left" = ["custom/home" "wlr/workspaces" "sway/mode" "sway/scratchpad"]; #"custom/media"];
-        
-        "modules-center" = ["wlr/taskbar"];
-        "modules-right" = ["mpris" "idle_inhibitor" "pulseaudio" "network" "cpu" "memory" "temperature" "backlight" "battery" "battery#bat2" "clock" "tray"];
+        "modules-left" = [
+          "custom/home"
+          "wlr/workspaces"
+          "sway/mode"
+          "sway/scratchpad"
+        ]; # "custom/media"];
+        "modules-center" = [ "wlr/taskbar" ];
+        "modules-right" = [
+          "mpris"
+          "idle_inhibitor"
+          "pulseaudio"
+          #"wireplumber"
+          "network"
+          "cpu"
+          "memory"
+          "temperature"
+          "backlight"
+          "battery"
+          "battery#bat2"
+          "clock"
+          "custom/notification"
+          "tray"
+        ];
         # Modules configuration
         # "sway/workspaces" = {
         #     "disable-scroll" = true;
@@ -46,13 +61,11 @@
             "unlocked" = "";
           };
         };
-        "sway/mode" = {
-          "format" = "<span style=\"italic\">{}</span>";
-        };
+        "sway/mode" = { "format" = ''<span style="italic">{}</span>''; };
         "sway/scratchpad" = {
           "format" = "{icon} {count}";
           "show-empty" = false;
-          "format-icons" = ["" ""];
+          "format-icons" = [ "" "" ];
           "tooltip" = true;
           "tooltip-format" = "{app} = {title}";
         };
@@ -96,28 +109,28 @@
         "clock" = {
           "format" = "{:%I:%M %p}";
           # "timezone" = "America/New_York";
-          "tooltip-format" = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+          "tooltip-format" = ''
+            <big>{:%Y %B}</big>
+            <tt><small>{calendar}</small></tt>'';
           "format-alt" = "{:%Y-%m-%d}";
         };
         "cpu" = {
           "format" = "{usage}% ";
           "tooltip" = false;
         };
-        "memory" = {
-          "format" = "{}% ";
-        };
+        "memory" = { "format" = "{}% "; };
         "temperature" = {
           # "thermal-zone" = 2;
           # "hwmon-path" = "/sys/class/hwmon/hwmon2/temp1_input";
           "critical-threshold" = 80;
           # "format-critical" = "{temperatureC}°C {icon}";
           "format" = "{temperatureC}°C {icon}";
-          "format-icons" = ["" "" ""];
+          "format-icons" = [ "" "" "" ];
         };
         "backlight" = {
           # "device" = "acpi_video1";
           "format" = "{percent}% {icon}";
-          "format-icons" = ["" "" "" "" "" "" "" "" ""];
+          "format-icons" = [ "" "" "" "" "" "" "" "" "" ];
         };
         "battery" = {
           "states" = {
@@ -131,14 +144,12 @@
           "format-alt" = "{time} {icon}";
           # "format-good" = ""; # An empty format will hide the module
           # "format-full" = "";
-          "format-icons" = ["" "" "" "" ""];
+          "format-icons" = [ "" "" "" "" "" ];
         };
-        "battery#bat2" = {
-          "bat" = "BAT2";
-        };
+        "battery#bat2" = { "bat" = "BAT2"; };
         "network" = {
           # "interface" = "wlp2*"; # (Optional) To force the use of this interface
-#          "format-wifi" = "{essid} ({signalStrength}%) ";
+          #          "format-wifi" = "{essid} ({signalStrength}%) ";
           "format-wifi" = "({signalStrength}%) ";
           "format-ethernet" = "{ipaddr}/{cidr} ";
           "tooltip-format" = "{ifname} via {gwaddr} ";
@@ -148,7 +159,8 @@
         };
         "pulseaudio" = {
           # "scroll-step" = 1; # %, can be a float
-#          "format" = "{volume}% {icon} {format_source}";
+          #          "format" = "{volume}% {icon} {format_source}";
+          "ignored-sinks" = [ "Easy Effects Sink" ];
           "format" = "{volume}% {icon}";
           "format-bluetooth" = "{volume}% {icon} {format_source}";
           "format-bluetooth-muted" = " {icon} {format_source}";
@@ -162,7 +174,7 @@
             "phone" = "";
             "portable" = "";
             "car" = "";
-            "default" = ["" "" ""];
+            "default" = [ "" "" "" ];
           };
           "on-click" = "pavucontrol";
         };
@@ -180,65 +192,94 @@
         #    };
         "mpris" = {
           "dynamic-len" = 20;
-          "format" = /*"{status_icon}*/" {dynamic}";
+          "format" =
+            # "{status_icon}
+            " {dynamic}";
           "status-icons" = {
-            "playing" = "⏵︎"; 
-            "paused" = "⏸︎"; 
+            "playing" = "⏵︎";
+            "paused" = "⏸︎";
             "stopped" = "⏹︎";
-            };
-        };
-        "wlr/taskbar"= {
-          "format"= "{icon}";
-          "icon-size"= 14;
-          "icon-theme"= "Numix-Circle";
-          "tooltip-format"= "{title}";
-          "on-click"= "activate";
-          "on-click-middle"= "close";
-          "ignore-list"= [
-           "Alacritty"
-          ];
-          "app_ids-mapping"= {
-            "firefoxdeveloperedition"= "firefox-developer-edition";
           };
-          "rewrite"= {
-            "Firefox Web Browser"= "Firefox";
-            "Foot Server"= "Terminal";
+        };
+        "wlr/taskbar" = {
+          "format" = "{icon}";
+          "icon-size" = 14;
+          "icon-theme" = "Numix-Circle";
+          "tooltip-format" = "{title}";
+          "on-click" = "activate";
+          "on-click-middle" = "close";
+          "ignore-list" = [ "Alacritty" ];
+          "app_ids-mapping" = {
+            "firefoxdeveloperedition" = "firefox-developer-edition";
+          };
+          "rewrite" = {
+            "Firefox Web Browser" = "Firefox";
+            "Foot Server" = "Terminal";
           };
         };
         "custom/home" = {
-      	  "format" = "+";
-	        "on-click" = "nwggrid -client";
+          "format" = "+";
+          "on-click" = "nwggrid -client";
         };
+        "wireplumber" = {
+          "format" = "{volume}% {icon}";
+          "format-muted" = "";
+          "on-click" = "pavucontrol";
+          "format-icons" = [ "" "" "" ];
+        };
+        "custom/notification" = {
+          "tooltip" = false;
+          "format" = "{} {icon}";
+          "format-icons" = {
+            "notification" = "<span foreground='red'><sup></sup></span>";
+            "none" = "";
+            "dnd-notification" = "<span foreground='red'><sup></sup></span>";
+            "dnd-none" = "";
+            "inhibited-notification" =
+              "<span foreground='red'><sup></sup></span>";
+            "inhibited-none" = "";
+            "dnd-inhibited-notification" =
+              "<span foreground='red'><sup></sup></span>";
+            "dnd-inhibited-none" = "";
+          };
+          "return-type" = "json";
+          "exec-if" = "which swaync-client";
+          "exec" = "swaync-client -swb";
+          "on-click" = "swaync-client -t -sw";
+          "on-click-right" = "swaync-client -d -sw";
+          "escape" = true;
+        };
+
       };
     };
-    style =  ''
-    
-      * {
-        font-size: 12px;
-        }
-        /* Each module */
-#battery,
-#clock,
-#cpu,
-#language,
-#memory,
-#mode,
-#network,
-#pulseaudio,
-#temperature,
-#tray,
-#backlight,
-#idle_inhibitor,
-#disk,
-#user,
-#mpris {
-	padding-left: 8pt;
-	padding-right: 8pt;
-}
-#custom-home {
-	padding-left: 8pt;
-	padding-right: 8pt;
-}
+    style = ''
+
+            * {
+              font-size: 12px;
+              }
+              /* Each module */
+      #battery,
+      #clock,
+      #cpu,
+      #language,
+      #memory,
+      #mode,
+      #network,
+      #pulseaudio,
+      #temperature,
+      #tray,
+      #backlight,
+      #idle_inhibitor,
+      #disk,
+      #user,
+      #mpris {
+      	padding-left: 8pt;
+      	padding-right: 8pt;
+      }
+      #custom-home {
+      	padding-left: 8pt;
+      	padding-right: 8pt;
+      }
     '';
   };
 }
